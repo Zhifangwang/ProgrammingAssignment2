@@ -5,10 +5,17 @@
 ## the inverse of imput matrix
 
 makeCacheMatrix <- function(x = matrix()) {
-        originmatrix <- x
-        inverse <- solve(x)
-        list(originmatrix = originmatrix,
-                inverse = inverse)
+        m <- NULL
+        set <- function(y) {
+        x <<- y
+        m <<- NULL
+        }
+        get <- function() x
+        setmean <- function(solve) m <<- solve
+        getmean <- function() m
+        list(set = set, get = get,
+        setsolve = setsolve,
+        getsolve = getsolve)
 }
 
 
@@ -19,11 +26,14 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## check the result of upon function 
-        m <- x$inverse
+        m <- x$getsolve()
         if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
         ## Return a matrix that is the inverse of 'x'
-        return(solve(x$originmatrix))
+        data <- x$get()
+        m <- solve(data, ...)
+        x$setmean(m)
+        m
 }
